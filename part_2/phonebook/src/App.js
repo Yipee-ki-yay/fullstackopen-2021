@@ -48,12 +48,13 @@ const App = () => {
         })
         .catch(error => {
           setNotificationFlag('error');
-          setNotificationMessage(`information of ${newName} has already been removed from the server`);
+          // setNotificationMessage(`information of ${newName} has already been removed from the server`);
+          setNotificationMessage(`${error.response.data.error}`);
           setTimeout(() => {
             setNotificationMessage(null);
             setNotificationFlag('success');
           }, 5000);
-          setPersons(persons.filter(p => p.id !== id));
+          // setPersons(persons.filter(p => p.id !== id));
         })
     }
 
