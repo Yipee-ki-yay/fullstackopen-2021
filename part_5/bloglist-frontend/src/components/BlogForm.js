@@ -22,7 +22,7 @@ const BlogForm = ({ handleAddBlog }) => {
   }
 
   return (
-    <form onSubmit={handleSubmitBlogForm}>
+    <form className="form-new-blog" onSubmit={handleSubmitBlogForm}>
       <div>
         <span>title</span>
         <input

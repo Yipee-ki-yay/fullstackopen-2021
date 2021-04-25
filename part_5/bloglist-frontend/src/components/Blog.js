@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, user }) => {
   const [visible, setVisible] = useState(false)
   const isShowRemoveButton = (user && user.name && blog.user && blog.user.name) && user.name === blog.user.name
-  console.log(user)
 
   const blogStyle = {
     paddingTop: 10,
@@ -25,14 +24,20 @@ const Blog = ({ blog, handleUpdateBlog, handleDeleteBlog, user }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} className="blog">
       <div>
-        {blog.title} {blog.author} <button onClick={() => setVisible(!visible)}>{visible ? 'hide' : 'show'}</button>
+        {blog.title} {blog.author}
+        <button
+          className="blog-view-btn"
+          onClick={() => setVisible(!visible)}
+        >
+          {visible ? 'hide' : 'show'}
+        </button>
       </div>
       {visible &&
         <div>
-          <div>{blog.url}</div>
-          <div>likes {blog.likes} <button onClick={handleClickLikeBtn}>like</button></div>
+          <div className="blog-url">{blog.url}</div>
+          <div className="blog-likes">likes {blog.likes} <button onClick={handleClickLikeBtn}>like</button></div>
           <div>{blog.user && blog.user.username}</div>
           {isShowRemoveButton && <button onClick={handleClickRemoveBtn}>remove</button>}
         </div>
