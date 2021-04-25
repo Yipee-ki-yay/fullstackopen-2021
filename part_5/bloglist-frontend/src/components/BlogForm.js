@@ -30,6 +30,7 @@ const BlogForm = ({ handleAddBlog }) => {
           onChange={({ target }) => handleSetBlogFields(target)}
           type="text"
           name="title"
+          id="title"
         />
       </div>
       <div>
@@ -39,6 +40,7 @@ const BlogForm = ({ handleAddBlog }) => {
           onChange={({ target }) => handleSetBlogFields(target)}
           type="text"
           name="author"
+          id="author"
         />
       </div>
       <div>
@@ -48,6 +50,7 @@ const BlogForm = ({ handleAddBlog }) => {
           onChange={({ target }) => handleSetBlogFields(target)}
           type="text"
           name="url"
+          id="url"
         />
       </div>
       <button type="submit">create</button>

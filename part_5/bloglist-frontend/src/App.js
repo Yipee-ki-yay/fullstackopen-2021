@@ -145,6 +145,7 @@ const App = () => {
             onChange={({ target }) => setUsername(target.value)}
             type="text"
             name="username"
+            id="username"
           />
         </div>
         <div>
@@ -154,9 +155,10 @@ const App = () => {
             onChange={({ target }) => setPassword(target.value)}
             type="text"
             name="password"
+            id="password"
           />
         </div>
-        <button type="submit">login</button>
+        <button id="login-button" type="submit">login</button>
       </form>
     </div>
   )
@@ -170,7 +172,7 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
       </div>
       <br/>
-      <Togglable buttonLabel="new note" ref={noteFormRef}>
+      <Togglable buttonLabel="new blog" ref={noteFormRef}>
         <BlogForm
           handleAddBlog={handleAddBlog}
         />
