@@ -6,13 +6,12 @@ import { setNotificationMessage } from '../reducers/notificationReducer'
 const AnecdoteForm = () => {
   const dispatch = useDispatch()
 
-  const handleCreateAnecdote = (e) => {
+  const handleCreateAnecdote = async (e) => {
     e.preventDefault();
     const content = e.target.anecdote.value
     e.target.anecdote.value = ''
     dispatch(createAnecdote(content))
-    dispatch(setNotificationMessage(`anecdote '${content}' created`))
-    setTimeout(() => dispatch(setNotificationMessage('')) , 5000)
+    dispatch(setNotificationMessage(`anecdote '${content}' created`, 5))
   }
 
   return (
