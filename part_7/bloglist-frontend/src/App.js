@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { setNotificationMessage } from './reducers/notificationReducer'
+import { initializeBlogs, createBlog } from './reducers/blogsReducer'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -10,11 +11,11 @@ import BlogForm from './components/BlogForm'
 import './index.css'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state.blogs)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  // const [ notificationMessage, setNotificationMessage] = useState(null)
   const [ notificationFlag, setNotificationFlag] = useState('success')
   const noteFormRef = useRef()
   const filteredBlogs = blogs.sort((a, b) => b.likes - a.likes)
@@ -22,10 +23,11 @@ const App = () => {
   console.log('filteredBlogs', filteredBlogs)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
-  }, [])
+    // blogService.getAll().then(blogs =>
+    //   setBlogs( blogs )
+    // )
+    dispatch(initializeBlogs())
+  }, [dispatch])
 
   useEffect(() => {
     const loggedBlogappUser = window.localStorage.getItem('loggedBlogappUser')
@@ -62,58 +64,48 @@ const App = () => {
     }
   }
 
-  const handleAddBlog = async (blogFields) => {
+  const handleAddBlog = (blogFields) => {
     noteFormRef.current.toggleVisibility()
 
-    try {
-      const createdBlog = await blogService.saveBlog(blogFields)
-      setBlogs([...blogs, createdBlog])
-      dispatch(setNotificationMessage(`Blog ${createdBlog.title} added`), 5)
-    } catch (exception) {
-      setNotificationFlag('error')
-      dispatch(setNotificationMessage(`${exception}`), 5)
-      setTimeout(() => {
-        setNotificationFlag('success')
-      }, 5000)
-    }
+    dispatch(createBlog(blogFields))
   }
 
-  const handleUpdateBlog = async (blog) => {
-    try {
-      const payload = {
-        data: {
-          likes: blog.likes + 1
-        },
-        id: blog.id
-      }
-      const updatedBlog = await blogService.updateBlog(payload)
-      setBlogs(blogs.map(b => b.id === updatedBlog.id ? { ...b, likes: updatedBlog.likes } : b))
-      dispatch(setNotificationMessage(`Blog ${updatedBlog.title} updated`), 5)
-    } catch (exception) {
-      setNotificationFlag('error')
-      dispatch(setNotificationMessage(`${exception}`), 5)
-      setTimeout(() => {
-        setNotificationFlag('success')
-      }, 5000)
-    }
-  }
+  // const handleUpdateBlog = async (blog) => {
+  //   try {
+  //     const payload = {
+  //       data: {
+  //         likes: blog.likes + 1
+  //       },
+  //       id: blog.id
+  //     }
+  //     const updatedBlog = await blogService.updateBlog(payload)
+  //     setBlogs(blogs.map(b => b.id === updatedBlog.id ? { ...b, likes: updatedBlog.likes } : b))
+  //     dispatch(setNotificationMessage(`Blog ${updatedBlog.title} updated`), 5)
+  //   } catch (exception) {
+  //     setNotificationFlag('error')
+  //     dispatch(setNotificationMessage(`${exception}`), 5)
+  //     setTimeout(() => {
+  //       setNotificationFlag('success')
+  //     }, 5000)
+  //   }
+  // }
 
-  const handleDeleteBlog = async (blog) => {
-    try {
-      const payload = {
-        id: blog.id
-      }
-      await blogService.deleteBlog(payload)
-      setBlogs(blogs.filter(b => b.id !== blog.id))
-      dispatch(setNotificationMessage(`Blog ${blog.title} deleted`), 5)
-    } catch (exception) {
-      setNotificationFlag('error')
-      dispatch(setNotificationMessage(`${exception}`), 5)
-      setTimeout(() => {
-        setNotificationFlag('success')
-      }, 5000)
-    }
-  }
+  // const handleDeleteBlog = async (blog) => {
+  //   try {
+  //     const payload = {
+  //       id: blog.id
+  //     }
+  //     await blogService.deleteBlog(payload)
+  //     setBlogs(blogs.filter(b => b.id !== blog.id))
+  //     dispatch(setNotificationMessage(`Blog ${blog.title} deleted`), 5)
+  //   } catch (exception) {
+  //     setNotificationFlag('error')
+  //     dispatch(setNotificationMessage(`${exception}`), 5)
+  //     setTimeout(() => {
+  //       setNotificationFlag('success')
+  //     }, 5000)
+  //   }
+  // }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
@@ -169,8 +161,10 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            handleUpdateBlog={handleUpdateBlog}
-            handleDeleteBlog={handleDeleteBlog}
+            // handleUpdateBlog={handleUpdateBlog}
+            // handleDeleteBlog={handleDeleteBlog}
+            handleUpdateBlog={() => {}}
+            handleDeleteBlog={() => {}}
             user={user}
           />
         )}
