@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { setNotificationMessage } from './reducers/notificationReducer'
 import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogsReducer'
+import { login } from './reducers/userReducer'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
-import loginService from './services/login'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -12,18 +10,16 @@ import './index.css'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // eslint-disable-next-line no-unused-vars
   const [ notificationFlag, setNotificationFlag] = useState('success')
   const noteFormRef = useRef()
   const filteredBlogs = blogs.sort((a, b) => b.likes - a.likes)
   const dispatch = useDispatch()
 
   useEffect(() => {
-    // blogService.getAll().then(blogs =>
-    //   setBlogs( blogs )
-    // )
     dispatch(initializeBlogs())
   }, [dispatch])
 
@@ -31,35 +27,19 @@ const App = () => {
     const loggedBlogappUser = window.localStorage.getItem('loggedBlogappUser')
     if (loggedBlogappUser) {
       const user = JSON.parse(loggedBlogappUser)
-      setUser(user)
+      dispatch({
+        type: 'SET_USER',
+        data: user
+      })
     }
   }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
 
-    try {
-      const user = await loginService.login({
-        username, password,
-      })
-      console.log('user', user)
-      blogService.setToken(user.token)
-
-      window.localStorage.setItem(
-        'loggedBlogappUser', JSON.stringify(user)
-      )
-
-      setUser(user)
-      setUsername('')
-      setPassword('')
-      dispatch(setNotificationMessage(`User ${user.username} logged in`), 5)
-    } catch (exception) {
-      setNotificationFlag('error')
-      dispatch(setNotificationMessage(`${exception.response.data.error}`), 5)
-      setTimeout(() => {
-        setNotificationFlag('success')
-      }, 5000)
-    }
+    dispatch(login({ username, password }))
+    setUsername('')
+    setPassword('')
   }
 
   const handleAddBlog = (blogFields) => {
@@ -78,7 +58,10 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogappUser')
-    setUser(null)
+    dispatch({
+      type: 'SET_USER',
+      data: null
+    })
   }
 
   const loginForm = () => (
