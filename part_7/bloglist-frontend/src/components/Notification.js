@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 const Notification = ({ flag }) => {
   const notificationMessage = useSelector(state => state.notification)
 
-  console.log('message', notificationMessage)
   if (!notificationMessage) {
     return null
   }

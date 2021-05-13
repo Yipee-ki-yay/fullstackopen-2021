@@ -15,6 +15,25 @@ const blogsReducer = (state = [], action) => {
       action.data
     ]
 
+  case 'UPDATE_BLOG':
+    // eslint-disable-next-line no-case-declarations
+    const changedBlogIndex = state.findIndex(b => b.id === action.data.id)
+
+    return [
+      ...state.slice(0, changedBlogIndex),
+      action.data,
+      ...state.slice(changedBlogIndex + 1),
+    ]
+
+  case 'DELETE_BLOG':
+    // eslint-disable-next-line no-case-declarations
+    const deletedBlogIndex = state.findIndex(b => b.id === action.data.id)
+
+    return [
+      ...state.slice(0, deletedBlogIndex),
+      ...state.slice(deletedBlogIndex + 1),
+    ]
+
   default:
     return state
   }
@@ -38,13 +57,48 @@ export const createBlog = (content) => {
         type: 'NEW_BLOG',
         data: createdBlog
       })
-      dispatch(setNotificationMessage(`Blog ${createdBlog.title} added`), 5)
+      dispatch(setNotificationMessage(`Blog ${createdBlog.title} added`, 5))
     } catch (exception) {
-      // setNotificationFlag('error')
-      dispatch(setNotificationMessage(`${exception}`), 5)
-      // setTimeout(() => {
-      //   setNotificationFlag('success')
-      // }, 5000)
+      dispatch(setNotificationMessage(`${exception}`, 5))
+    }
+  }
+}
+
+export const updateBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      const payload = {
+        data: {
+          likes: blog.likes + 1
+        },
+        id: blog.id
+      }
+      const updatedBlog = await blogService.updateBlog(payload)
+      dispatch({
+        type: 'UPDATE_BLOG',
+        data: updatedBlog
+      })
+      dispatch(setNotificationMessage(`Blog ${updatedBlog.title} updated`))
+    } catch (exception) {
+      dispatch(setNotificationMessage(`${exception}`, 5))
+    }
+  }
+}
+
+export const deleteBlog = (blog) => {
+  return async (dispatch) => {
+    try {
+      const payload = {
+        id: blog.id
+      }
+      await blogService.deleteBlog(payload)
+      dispatch({
+        type: 'DELETE_BLOG',
+        data: payload
+      })
+      dispatch(setNotificationMessage(`Blog ${blog.title} deleted`, 5))
+    } catch (exception) {
+      dispatch(setNotificationMessage(`${exception}`, 5))
     }
   }
 }
