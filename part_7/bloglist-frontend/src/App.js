@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react'
+import {
+  BrowserRouter as Router,
+  Switch, Route
+} from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs, createBlog, updateBlog, deleteBlog } from './reducers/blogsReducer'
+import { initializeUsers } from './reducers/usersReducer'
 import { login } from './reducers/userReducer'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
+import Users from './components/Users'
+import UserInfo from './components/UserInfo'
+import BlogInfo from './components/BlogInfo'
+import NavMenu from './components/NavMenu'
 import './index.css'
 
 const App = () => {
@@ -21,6 +30,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [dispatch])
 
   useEffect(() => {
@@ -56,13 +66,13 @@ const App = () => {
     dispatch(deleteBlog(blog))
   }
 
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedBlogappUser')
-    dispatch({
-      type: 'SET_USER',
-      data: null
-    })
-  }
+  // const handleLogout = () => {
+  //   window.localStorage.removeItem('loggedBlogappUser')
+  //   dispatch({
+  //     type: 'SET_USER',
+  //     data: null
+  //   })
+  // }
 
   const loginForm = () => (
     <div>
@@ -95,31 +105,46 @@ const App = () => {
   )
 
   const blogsBlock = () => (
-    <div>
-      <h2>blogs</h2>
+    <Router>
       <Notification flag={notificationFlag} />
-      <div>
+      {/* <div>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
-      </div>
+      </div> */}
+      <NavMenu />
       <br/>
-      <Togglable buttonLabel="new blog" ref={noteFormRef}>
-        <BlogForm
-          handleAddBlog={handleAddBlog}
-        />
-      </Togglable>
-      <div>
-        {filteredBlogs.map(blog =>
-          <Blog
-            key={blog.id}
-            blog={blog}
+      <Switch>
+        <Route path="/blogs/:id">
+          <BlogInfo
             handleUpdateBlog={handleUpdateBlog}
-            handleDeleteBlog={handleDeleteBlog}
-            user={user}
           />
-        )}
-      </div>
-    </div>
+        </Route>
+        <Route path="/users/:id">
+          <UserInfo/>
+        </Route>
+        <Route path="/users">
+          <Users/>
+        </Route>
+        <Route path="/">
+          <Togglable buttonLabel="new blog" ref={noteFormRef}>
+            <BlogForm
+              handleAddBlog={handleAddBlog}
+            />
+          </Togglable>
+          <div>
+            {filteredBlogs.map(blog =>
+              <Blog
+                key={blog.id}
+                blog={blog}
+                handleUpdateBlog={handleUpdateBlog}
+                handleDeleteBlog={handleDeleteBlog}
+                user={user}
+              />
+            )}
+          </div>
+        </Route>
+      </Switch>
+    </Router>
   )
 
   return (
