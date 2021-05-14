@@ -3,6 +3,15 @@ import { useSelector } from 'react-redux'
 import {
   Link
 } from 'react-router-dom'
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableContainer,
+  Paper,
+} from '@material-ui/core'
 
 const Users = () => {
   const users = useSelector(state => state.users)
@@ -11,26 +20,26 @@ const Users = () => {
   return (
     <div>
       <h2>Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>blogs created</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {
-            users.map(u => (
-              <tr key={u.id}>
-                <td><Link to={`/users/${u.id}`}>{u.name}</Link></td>
-                <td>{u.blogs.length}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-
-      </table>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell></TableCell>
+              <TableCell>blogs created</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {
+              users.map(u => (
+                <TableRow key={u.id}>
+                  <TableCell><Link to={`/users/${u.id}`}>{u.name}</Link></TableCell>
+                  <TableCell>{u.blogs.length}</TableCell>
+                </TableRow>
+              ))
+            }
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

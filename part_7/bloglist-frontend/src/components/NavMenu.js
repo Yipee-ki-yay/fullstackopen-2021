@@ -3,6 +3,11 @@ import {
   Link
 } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import {
+  AppBar,
+  Toolbar,
+  Button
+} from '@material-ui/core'
 
 const NavMenu = () => {
   const user = useSelector(state => state.user)
@@ -10,7 +15,7 @@ const NavMenu = () => {
     paddingRight: 5
   }
   const background = {
-    background: 'lightgrey',
+    background: 'darkgrey',
     padding: '10px'
   }
   const dispatch = useDispatch()
@@ -24,14 +29,16 @@ const NavMenu = () => {
   }
 
   return (
-    <div style={background}>
-      <Link to='/' style={padding}>blogs</Link>
-      <Link to='/users' style={padding}>users</Link>
-      <span>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </span>
-    </div>
+    <AppBar position="static" style={background}>
+      <Toolbar>
+        <span><Link to='/' style={padding}>blogs</Link></span>
+        <span><Link to='/users' style={padding}>users</Link></span>
+        <span>
+          {user.name} logged in
+          <Button variant="contained" color="primary" onClick={handleLogout}>logout</Button>
+        </span>
+      </Toolbar>
+    </AppBar>
   )
 }
 

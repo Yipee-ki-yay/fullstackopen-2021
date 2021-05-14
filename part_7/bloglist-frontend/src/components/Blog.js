@@ -2,6 +2,10 @@ import React from 'react'
 import {
   Link
 } from 'react-router-dom'
+import {
+  TableCell,
+  TableRow,
+} from '@material-ui/core'
 
 const Blog = ({ blog }) => {
 
@@ -14,9 +18,9 @@ const Blog = ({ blog }) => {
   }
 
   return (
-    <div style={blogStyle} className="blog">
-      <span><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></span>
-    </div>
+    <TableRow style={blogStyle} className="blog">
+      <TableCell><Link to={`/blogs/${blog.id}`}>{blog.title}</Link></TableCell>
+    </TableRow>
   )
 }
 

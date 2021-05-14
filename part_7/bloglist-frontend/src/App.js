@@ -15,6 +15,15 @@ import Users from './components/Users'
 import UserInfo from './components/UserInfo'
 import BlogInfo from './components/BlogInfo'
 import NavMenu from './components/NavMenu'
+import {
+  Container,
+  Table,
+  TableBody,
+  TableContainer,
+  Paper,
+  TextField,
+  Button
+} from '@material-ui/core'
 import './index.css'
 
 const App = () => {
@@ -23,7 +32,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   // eslint-disable-next-line no-unused-vars
-  const [ notificationFlag, setNotificationFlag] = useState('success')
   const noteFormRef = useRef()
   const filteredBlogs = blogs.sort((a, b) => b.likes - a.likes)
   const dispatch = useDispatch()
@@ -66,51 +74,39 @@ const App = () => {
     dispatch(deleteBlog(blog))
   }
 
-  // const handleLogout = () => {
-  //   window.localStorage.removeItem('loggedBlogappUser')
-  //   dispatch({
-  //     type: 'SET_USER',
-  //     data: null
-  //   })
-  // }
-
   const loginForm = () => (
     <div>
       <h2>Log in to application</h2>
-      <Notification flag={notificationFlag} />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
-          <span>username</span>
-          <input
+          <TextField
             value={username}
             onChange={({ target }) => setUsername(target.value)}
             type="text"
             name="username"
+            label="username"
             id="username"
           />
         </div>
         <div>
-          <span>password</span>
-          <input
+          <TextField
             value={password}
             onChange={({ target }) => setPassword(target.value)}
             type="text"
             name="password"
+            label="password"
             id="password"
           />
         </div>
-        <button id="login-button" type="submit">login</button>
+        <Button variant="contained" color="primary" id="login-button" type="submit">login</Button>
       </form>
     </div>
   )
 
   const blogsBlock = () => (
     <Router>
-      <Notification flag={notificationFlag} />
-      {/* <div>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </div> */}
+      <Notification />
       <NavMenu />
       <br/>
       <Switch>
@@ -131,29 +127,33 @@ const App = () => {
               handleAddBlog={handleAddBlog}
             />
           </Togglable>
-          <div>
-            {filteredBlogs.map(blog =>
-              <Blog
-                key={blog.id}
-                blog={blog}
-                handleUpdateBlog={handleUpdateBlog}
-                handleDeleteBlog={handleDeleteBlog}
-                user={user}
-              />
-            )}
-          </div>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableBody>
+                {filteredBlogs.map(blog =>
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    handleUpdateBlog={handleUpdateBlog}
+                    handleDeleteBlog={handleDeleteBlog}
+                    user={user}
+                  />
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Route>
       </Switch>
     </Router>
   )
 
   return (
-    <div>
+    <Container>
       {user === null ?
         loginForm() :
         blogsBlock()
       }
-    </div>
+    </Container>
   )
 }
 

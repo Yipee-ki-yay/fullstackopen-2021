@@ -1,7 +1,8 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Alert } from '@material-ui/lab'
 
-const Notification = ({ flag }) => {
+const Notification = () => {
   const notificationMessage = useSelector(state => state.notification)
 
   if (!notificationMessage) {
@@ -9,9 +10,9 @@ const Notification = ({ flag }) => {
   }
 
   return (
-    <div className={flag}>
+    <Alert severity="success">
       {notificationMessage}
-    </div>
+    </Alert>
   )
 }
 

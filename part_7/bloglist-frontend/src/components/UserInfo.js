@@ -3,6 +3,9 @@ import {
   useParams
 } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 
 const UserInfo = () => {
   const id = useParams().id
@@ -16,11 +19,11 @@ const UserInfo = () => {
     <div>
       <h2>{user.name}</h2>
       <b>added blogs</b>
-      <ul>
+      <List>
         {user.blogs.map(b => (
-          <li key={b.id}>{b.title}</li>
+          <ListItem key={b.id}><ListItemText>{b.title}</ListItemText></ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }

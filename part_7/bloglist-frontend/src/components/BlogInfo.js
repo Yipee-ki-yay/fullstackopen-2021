@@ -4,6 +4,13 @@ import {
 } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { saveComment } from '../reducers/blogsReducer'
+import {
+  TextField,
+  Button
+} from '@material-ui/core'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
 
 const BlogInfo = ({ handleUpdateBlog }) => {
   const id = useParams().id
@@ -29,20 +36,19 @@ const BlogInfo = ({ handleUpdateBlog }) => {
     <div>
       <h2>{blog.title}</h2>
       <a href={blog.url}>{blog.url}</a>
-      <div className="blog-likes">{blog.likes} likes <button className="like-button" onClick={handleClickLikeBtn}>like</button></div>
+      <div className="blog-likes">{blog.likes} likes <Button variant="contained" color="primary" className="like-button" onClick={handleClickLikeBtn}>like</Button></div>
       {blog.user && <div>added by {blog.user.username}</div>}
       <br/>
       <div>
-        <b>comments</b>
         <form onSubmit={handleSubmit}>
-          <input value={comment} onChange={({ target }) => setComment(target.value)} type="text"/>
-          <button>add comment</button>
+          <TextField label="comment" value={comment} onChange={({ target }) => setComment(target.value)} type="text"/>
+          <Button variant="contained" color="primary">add comment</Button>
         </form>
-        {blog.comments && blog.comments.length && <ul>
+        {blog.comments && blog.comments.length > 0 && <List>
           {blog.comments.map((c, idx) => (
-            <li key={`${c}_${idx}`}>{c}</li>
+            <ListItem key={`${c}_${idx}`}><ListItemText>{c}</ListItemText></ListItem>
           ))}
-        </ul>}
+        </List>}
       </div>
     </div>
   )
