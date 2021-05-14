@@ -49,6 +49,22 @@ blogsRouter.post('/', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
+blogsRouter.post('/:id/comments', async (request, response) => {
+  const body = request.body
+  const blog = await Blog.findById(request.params.id)
+
+  if (!body.text) {
+    return response.status(400).json({
+      error: 'text is missing'
+    })
+  }
+
+  blog.comments = blog.comments.concat(body.text)
+  await blog.save()
+
+  response.status(201).json(blog)
+})
+
 blogsRouter.delete('/:id', async (request, response, next) => {
   try {
     const blog = await Blog.findById(request.params.id)

@@ -103,4 +103,20 @@ export const deleteBlog = (blog) => {
   }
 }
 
+export const saveComment = (payload) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogService.saveComment(payload)
+
+      dispatch({
+        type: 'UPDATE_BLOG',
+        data: updatedBlog
+      })
+      dispatch(setNotificationMessage('To blog added comment', 5))
+    } catch (exception) {
+      dispatch(setNotificationMessage(`${exception}`, 5))
+    }
+  }
+}
+
 export default blogsReducer

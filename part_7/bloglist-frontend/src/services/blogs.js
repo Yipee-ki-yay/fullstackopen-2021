@@ -21,6 +21,11 @@ const saveBlog = async payload => {
   return response.data
 }
 
+const saveComment = async payload => {
+  const response = await axios.post(`${baseUrl}/${payload.id}/comments`, payload)
+  return response.data
+}
+
 const updateBlog = async payload => {
   const { data, id } = payload
   const config = {
@@ -40,4 +45,4 @@ const deleteBlog = async payload => {
   return response.data
 }
 
-export default { getAll, saveBlog, updateBlog, deleteBlog, setToken }
+export default { getAll, saveBlog, updateBlog, deleteBlog, setToken, saveComment }
