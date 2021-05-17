@@ -178,7 +178,7 @@ const resolvers = {
       console.log('authorIdx', authorIdx)
 
 
-      const updatedAuthor = {...author, born: args.setBornTo}
+      const updatedAuthor = {...author, born: args.setBornTo, id: uuid()}
       authors = [
         ...authors.slice(0, authorIdx),
         updatedAuthor,
