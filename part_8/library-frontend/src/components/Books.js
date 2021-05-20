@@ -1,13 +1,24 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useQuery } from '@apollo/client';
 import { ALL_BOOKS } from '../queries'
 
 const Books = (props) => {
-  let books = []
   const result = useQuery(ALL_BOOKS) 
-  if (result.data && result.data.allBooks) {
-    books = [...result.data.allBooks]
+  const [filteredBooks, setFilteredBooks] = useState([])
+
+  const handleFilterBooks = (genre) => {
+    if ( genre === 'all' ) {
+      setFilteredBooks([...result.data.allBooks])
+      return
+    }
+    setFilteredBooks(result.data.allBooks.filter(b => b.genres.includes(genre)))
   }
+
+  useEffect(() => {
+    if ( result.data ) {
+      setFilteredBooks([...result.data.allBooks])
+    }
+  }, [result.data]) // eslint-disable-line
 
   if (!props.show) {
     return null
@@ -28,15 +39,22 @@ const Books = (props) => {
               published
             </th>
           </tr>
-          {books.map(a =>
+          {filteredBooks.map(a =>
             <tr key={a.title}>
               <td>{a.title}</td>
-              <td>{a.author}</td>
+              <td>{a.author.name}</td>
               <td>{a.published}</td>
             </tr>
           )}
         </tbody>
       </table>
+
+      <div>
+        <button onClick={() => handleFilterBooks('crime')}>crime</button>
+        <button onClick={() => handleFilterBooks('refactoring')}>refactoring</button>
+        <button onClick={() => handleFilterBooks('code')}>code</button>
+        <button onClick={() => handleFilterBooks('all')}>all</button>
+      </div>
     </div>
   )
 }

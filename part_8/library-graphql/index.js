@@ -166,6 +166,18 @@ const resolvers = {
     allBooks: async (root, args) => {
       const books = await Book.find({}).populate('author')
 
+      if (args.author && args.genre) {
+        return books.filter(
+          book =>
+            book.author.name === args.author &&
+            book.genres.includes(args.genre)
+        )
+      }
+
+      if (args.author) {
+        return books.filter(book => book.author.name === args.author)
+      }
+
       // if (args.author && args.genre) {
       //   return books
       //     .filter(b => b.author === args.author)
