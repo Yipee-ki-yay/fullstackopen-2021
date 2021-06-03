@@ -13,6 +13,25 @@ interface RatingValues {
   ratingDescription: string
 }
 
+interface MultiplyValues {
+  target: number;
+  timeDailyHours: number[];
+}
+
+const parseArguments = (args: Array<string>): MultiplyValues => {
+  if (args.length < 4) throw new Error('Not enough arguments')
+  const timeDailyHoursArgs = args.slice(3)
+
+  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+    return {
+      target: Number(args[2]),
+      timeDailyHours: timeDailyHoursArgs.map(dh => Number(dh))
+    }
+  } else {
+    throw new Error('Provided values were not numbers!');
+  }
+}
+
 const handleRatingValue = (targetDailyHours: number, average: number): RatingValues => {
   if (average < targetDailyHours) {
     return {rating: 3, ratingDescription: 'not to bad, but could be better'}
@@ -37,4 +56,11 @@ const calculateExercises = (timeDailyHours: number[], targetDailyHours: number):
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  const { target, timeDailyHours } = parseArguments(process.argv);
+  console.log(calculateExercises(timeDailyHours, target))
+} catch (e) {
+  console.log('Error, something bad happened, message: ', e.message);
+}
+
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
