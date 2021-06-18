@@ -1,7 +1,7 @@
 // import diaryData from '../../data/diaries';
 import patients from '../../data/patients';
 // import { NonSensitivePatient, Patient, NewPatient, PublicPatient } from '../types';
-import { Patient, NewPatient, PublicPatient } from '../types';
+import { Patient, NewPatient, PublicPatient, NewEntry, Entry } from '../types';
 import {v1 as uuid} from 'uuid';
 // const diaries: Array<DiaryEntry> = diaryData as Array<DiaryEntry>;
 
@@ -34,9 +34,22 @@ const addPatient = (patient: NewPatient): Patient => {
   return newPatient;
 };
 
+const addEntry = (patient: Patient, newEntry: NewEntry): Patient => {
+  const id: string = uuid();
+
+  const entryToAdd: Entry = {
+    ...newEntry,
+    id,
+  };
+  patient.entries.push(entryToAdd);
+
+  return patient;
+};
+
 export default {
   getEntries,
   addPatient,
   getNonSensitivePatient,
-  findById
+  findById,
+  addEntry,
 };
